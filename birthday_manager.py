@@ -1,3 +1,5 @@
+import os
+import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from datetime import datetime, date
@@ -10,8 +12,11 @@ class BirthdayManager:
         
     def get_service(self):
         """Create and return Google Sheets service"""
-        creds = service_account.Credentials.from_service_account_file(
-            'credentials.json', scopes=self.SCOPES)
+        credentials_dict = json.loads(os.getenv('GOOGLE_CREDENTIALS', '{}'))
+        creds = service_account.Credentials.from_info(
+        credentials_dict, 
+        scopes=self.SCOPES
+    )
         return build('sheets', 'v4', credentials=creds)
     
     def get_all_birthdays(self):
