@@ -17,7 +17,7 @@ async def root():
 @app.get("/check-birthdays")
 async def check_birthdays():
     reminder = BirthdayManager()
-    birthdays = reminder.get_birthdays()
+    birthdays = reminder.get_all_birthdays()
     todays_birthdays = [b for b in birthdays if reminder.is_birthday_today(b['date'])]
     
     return {
