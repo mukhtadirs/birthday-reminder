@@ -1,6 +1,12 @@
+import os
+import json
 from fastapi import FastAPI
 from birthday_manager import BirthdayReminder
 import asyncio
+
+# Load credentials from environment variable
+GOOGLE_CREDS = json.loads(os.getenv('GOOGLE_CREDENTIALS', '{}'))
+BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 app = FastAPI()
 
