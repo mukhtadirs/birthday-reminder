@@ -1,7 +1,7 @@
 import os
 import json
 from fastapi import FastAPI
-from birthday_manager import BirthdayReminder
+from birthday_manager import BirthdayManager
 import asyncio
 
 # Load credentials from environment variable
@@ -16,7 +16,7 @@ async def root():
 
 @app.get("/check-birthdays")
 async def check_birthdays():
-    reminder = BirthdayReminder()
+    reminder = BirthdayManager()
     birthdays = reminder.get_birthdays()
     todays_birthdays = [b for b in birthdays if reminder.is_birthday_today(b['date'])]
     
