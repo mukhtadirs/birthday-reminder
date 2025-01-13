@@ -12,12 +12,16 @@ class BirthdayManager:
         
     def get_service(self):
         """Create and return Google Sheets service"""
-        credentials_dict = json.loads(os.getenv('GOOGLE_CREDENTIALS', '{}'))
-        creds = service_account.Credentials.from_info(
-        credentials_dict, 
-        scopes=self.SCOPES
-    )
-        return build('sheets', 'v4', credentials=creds)
+        try:
+            credentials_dict = json.loads(os.getenv('GOOGLE_CREDENTIALS', '{}'))
+            creds = service_account.Credentials.from_service_account_info(  # Changed this line
+            credentials_dict, 
+            scopes=self.SCOPES
+            )
+            return build('sheets', 'v4', credentials=creds)
+        except Exception as e:
+            print(f"Error in get_service: {e}")
+            raise
     
     def get_all_birthdays(self):
         """Fetch all birthdays from Google Sheet"""
