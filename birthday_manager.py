@@ -22,6 +22,7 @@ class BirthdayManager:
     def get_all_birthdays(self):
         """Fetch all birthdays from Google Sheet"""
         try:
+            print("Starting to fetch birthdays...")  # Debug line
             service = self.get_service()
             sheet = service.spreadsheets()
             result = sheet.values().get(
@@ -30,6 +31,7 @@ class BirthdayManager:
             ).execute()
             
             values = result.get('values', [])
+            print(f"Raw values from sheet: {values}")  # Debug line
             if not values:
                 print('No data found in sheet')
                 return []
