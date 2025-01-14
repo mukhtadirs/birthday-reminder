@@ -3,10 +3,12 @@ import json
 from fastapi import FastAPI
 from birthday_manager import BirthdayManager
 import asyncio
+from telegram import Bot  # Add this import
 
 # Load credentials from environment variable
 GOOGLE_CREDS = json.loads(os.getenv('GOOGLE_CREDENTIALS', '{}'))
 BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+CHAT_ID = 14265302
 
 app = FastAPI()
 
@@ -24,3 +26,23 @@ async def check_birthdays():
         "total_birthdays": len(birthdays),
         "todays_birthdays": todays_birthdays
     }
+    
+@app.get("/send-notifications")
+async def send_notifications():
+    try:
+        print("Starting birthday check for notifications...")  # Debug line
+        reminder = BirthdayManager()
+        todays_birthdays = reminder.get_todays_birthdays()
+        
+        if todays_birthdays:
+            bot = Bot(token=BOT_TOKEN)
+            for birthday in todays_birthdays:
+                message = f"🎉 Birthday Reminder: Today is {birthday['name']}'s birthday! 🎂"
+                await bot.send_message(chat_id=CHAT_ID, text=message)
+            return {"success": True, "message": f"Sent notifications for {len(todays_birthdays)} birthdays"}
+        else:
+            return {"success": True, "message": "No birthdays today"}
+            
+    except Exception as e:
+        print(f"Error in send_notifications: {e}")  # Debug line
+        return {"success": False, "error": str(e)}
